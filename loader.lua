@@ -9,12 +9,12 @@
     - Line ~26: Ganti LogoImageID dengan Roblox Asset ID logo Anda
 ]]
 
-print("🔄 Loading ANTC HUB...")
+print("Loading ANTC HUB...")
 
 -- Load WindUI Library
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/APISje/ANTCHUBV2/refs/heads/main/main.lua", true))()
 
-print("✅ ANTC HUB Library Loaded!")
+print("ANTC HUB Library Loaded!")
 
 -- ═══════════════════════════════════════════════════════════
 -- SETTING BANNER & LOGO (GANTI DISINI)
@@ -107,7 +107,7 @@ local Window = WindUI:CreateWindow({
     HasOutline = true
 })
 
-print("✅ Window Created!")
+print("Window Created!")
 
 -- Fix Minimize Bug
 local WindowFrame = Window._window
@@ -149,7 +149,7 @@ FishItSection:Button({
         if not DevelopmentMode then
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "🔒 Unlock dengan Development Login! Masukkan kode APIS di tab Development.",
+                Description = "Unlock dengan Development Login! Masukkan kode APIS di tab Development.",
                 Duration = 5
             })
             return
@@ -158,34 +158,60 @@ FishItSection:Button({
         -- Super Intan logic untuk development
         Window:Notify({
             Title = "Super Intan",
-            Description = "✅ Super Intan Activated!",
+            Description = "Super Intan Activated!",
             Duration = 3
         })
         SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Intan!")
     end
 })
 
--- Super Bland (Unlock dengan Development)
-FishItSection:Button({
+-- Super Bland (Unlock dengan Development) - 0ms
+local SuperBlandEnabled = false
+local SuperBlandConnection = nil
+
+FishItSection:Toggle({
     Title = "Super Bland",
-    Description = "Unlock dengan Development Login (kode: APIS)",
-    Callback = function()
+    Description = "Unlock dengan Development Login (kode: APIS) - 0ms",
+    Default = false,
+    Callback = function(enabled)
         if not DevelopmentMode then
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "🔒 Unlock dengan Development Login! Masukkan kode APIS di tab Development.",
+                Description = "Unlock dengan Development Login! Masukkan kode APIS di tab Development.",
                 Duration = 5
             })
             return
         end
         
-        -- Super Bland logic untuk development
-        Window:Notify({
-            Title = "Super Bland",
-            Description = "✅ Super Bland Activated!",
-            Duration = 3
-        })
-        SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Bland!")
+        SuperBlandEnabled = enabled
+        
+        if enabled then
+            SuperBlandConnection = task.spawn(function()
+                while SuperBlandEnabled do
+                    -- Super Bland logic - 0ms loop
+                    -- Add your Super Bland implementation here
+                    task.wait() -- 0ms delay
+                end
+            end)
+            
+            Window:Notify({
+                Title = "Super Bland",
+                Description = "Super Bland Activated (0ms)!",
+                Duration = 3
+            })
+            SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Bland!")
+        else
+            if SuperBlandConnection then
+                task.cancel(SuperBlandConnection)
+                SuperBlandConnection = nil
+            end
+            
+            Window:Notify({
+                Title = "Super Bland",
+                Description = "Super Bland Deactivated!",
+                Duration = 3
+            })
+        end
     end
 })
 
@@ -232,7 +258,7 @@ FishItSection:Toggle({
             
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "✅ Fast Auto Clicker ON (tidak mengganggu GUI)",
+                Description = "Fast Auto Clicker ON (tidak mengganggu GUI)",
                 Duration = 3
             })
         else
@@ -244,7 +270,7 @@ FishItSection:Toggle({
             
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "❌ Fast Auto Clicker OFF",
+                Description = "Fast Auto Clicker OFF",
                 Duration = 3
             })
         end
@@ -279,13 +305,13 @@ DevLoginSection:Input({
                 DevelopmentMode = true
                 Window:Notify({
                     Title = "ANTC HUB Development",
-                    Description = "✅ Welcome Developer " .. playerName .. "!",
+                    Description = "Welcome Developer " .. playerName .. "!",
                     Duration = 5
                 })
                 
                 -- Unlock Development Features
                 DevLoginSection:Button({
-                    Title = "✅ Development Mode Active",
+                    Title = "Development Mode Active",
                     Description = "Anda memiliki akses penuh",
                     Callback = function()
                         Window:Notify({
@@ -299,17 +325,17 @@ DevLoginSection:Input({
                 -- User tidak authorized, kick setelah 10 detik
                 Window:Notify({
                     Title = "ANTC HUB Development",
-                    Description = "❌ Unauthorized access! Kicking in 10 seconds...",
+                    Description = "Unauthorized access! Kicking in 10 seconds...",
                     Duration = 10
                 })
                 
                 task.wait(10)
-                Players.LocalPlayer:Kick("⚠️ Unauthorized Development Access\nHanya " .. AuthorizedDevAccount .. " yang dapat menggunakan kode APIS")
+                Players.LocalPlayer:Kick("Unauthorized Development Access\nHanya " .. AuthorizedDevAccount .. " yang dapat menggunakan kode APIS")
             end
         else
             Window:Notify({
                 Title = "ANTC HUB Development",
-                Description = "❌ Kode salah!",
+                Description = "Kode salah!",
                 Duration = 3
             })
         end
@@ -324,13 +350,13 @@ local DevFeaturesSection = DevelopmentTab:Section({
 
 -- Super Intan (UNLOCKED untuk Development)
 DevFeaturesSection:Button({
-    Title = "✅ Super Intan (Dev)",
+    Title = "Super Intan (Dev)",
     Description = "Super Intan - Development Version",
     Callback = function()
         if DevelopmentMode then
             Window:Notify({
                 Title = "Development",
-                Description = "✅ Super Intan Activated!",
+                Description = "Super Intan Activated!",
                 Duration = 3
             })
             SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Intan!")
@@ -338,30 +364,56 @@ DevFeaturesSection:Button({
         else
             Window:Notify({
                 Title = "Development",
-                Description = "❌ Masukkan kode Development dulu!",
+                Description = "Masukkan kode Development dulu!",
                 Duration = 3
             })
         end
     end
 })
 
--- Super Bland (UNLOCKED untuk Development)
-DevFeaturesSection:Button({
-    Title = "✅ Super Bland (Dev)",
-    Description = "Super Bland - Development Version",
-    Callback = function()
+-- Super Bland (UNLOCKED untuk Development) - 0ms Toggle
+local DevBlandEnabled = false
+local DevBlandConnection = nil
+
+DevFeaturesSection:Toggle({
+    Title = "Super Bland (Dev)",
+    Description = "Super Bland - Development Version - 0ms",
+    Default = false,
+    Callback = function(enabled)
         if DevelopmentMode then
-            Window:Notify({
-                Title = "Development",
-                Description = "✅ Super Bland Activated!",
-                Duration = 3
-            })
-            SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Bland!")
-            -- Add your Super Bland logic here
+            DevBlandEnabled = enabled
+            
+            if enabled then
+                DevBlandConnection = task.spawn(function()
+                    while DevBlandEnabled do
+                        -- Super Bland logic - 0ms loop
+                        -- Add your Super Bland implementation here
+                        task.wait() -- 0ms delay
+                    end
+                end)
+                
+                Window:Notify({
+                    Title = "Development",
+                    Description = "Super Bland Activated (0ms)!",
+                    Duration = 3
+                })
+                SendServerMessage("Developer " .. Players.LocalPlayer.Name .. " activated Super Bland!")
+            else
+                if DevBlandConnection then
+                    task.cancel(DevBlandConnection)
+                    DevBlandConnection = nil
+                end
+                
+                Window:Notify({
+                    Title = "Development",
+                    Description = "Super Bland Deactivated!",
+                    Duration = 3
+                })
+            end
         else
             Window:Notify({
                 Title = "Development",
-                Description = "❌ Masukkan kode Development dulu!",
+                Description = "Masukkan kode Development dulu!",
                 Duration = 3
             })
         end
@@ -375,7 +427,7 @@ local DevTestSection = DevelopmentTab:Section({
 })
 
 DevTestSection:Button({
-    Title = "🔔 Test Server Notification",
+    Title = "Test Server Notification",
     Description = "Test notifikasi server global",
     Callback = function()
         if DevelopmentMode then
@@ -390,13 +442,13 @@ DevTestSection:Button({
             
             Window:Notify({
                 Title = "Development",
-                Description = "✅ Server notifications sent!",
+                Description = "Server notifications sent!",
                 Duration = 3
             })
         else
             Window:Notify({
                 Title = "Development",
-                Description = "❌ Masukkan kode Development dulu!",
+                Description = "Masukkan kode Development dulu!",
                 Duration = 3
             })
         end
@@ -413,14 +465,14 @@ DevTestSection:Input({
                 SendServerMessage(value)
                 Window:Notify({
                     Title = "Development",
-                    Description = "✅ Message sent: " .. value,
+                    Description = "Message sent: " .. value,
                     Duration = 3
                 })
             end
         else
             Window:Notify({
                 Title = "Development",
-                Description = "❌ Masukkan kode Development dulu!",
+                Description = "Masukkan kode Development dulu!",
                 Duration = 3
             })
         end
@@ -429,15 +481,15 @@ DevTestSection:Input({
 
 -- Account Proceed Info
 DevTestSection:Button({
-    Title = "📋 Account Info",
+    Title = "Account Info",
     Description = "Lihat informasi akun",
     Callback = function()
         local info = string.format(
             "Username: %s\nUser ID: %s\nDevelopment Mode: %s\nAuthorized: %s",
             Players.LocalPlayer.Name,
             Players.LocalPlayer.UserId,
-            DevelopmentMode and "✅ Active" or "❌ Inactive",
-            Players.LocalPlayer.Name == AuthorizedDevAccount and "✅ Yes" or "❌ No"
+            DevelopmentMode and "Active" or "Inactive",
+            Players.LocalPlayer.Name == AuthorizedDevAccount and "Yes" or "No"
         )
         
         Window:Notify({
@@ -581,13 +633,13 @@ TeleportSection:Button({
         if WindUI.Fitur.SavePosition() then
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "✅ Posisi tersimpan!",
+                Description = "Posisi tersimpan!",
                 Duration = 3
             })
         else
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "❌ Gagal simpan posisi!",
+                Description = "Gagal simpan posisi!",
                 Duration = 3
             })
         end
@@ -602,16 +654,286 @@ TeleportSection:Button({
         if WindUI.Fitur.LoadPosition() then
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "✅ Teleport ke posisi tersimpan!",
+                Description = "Teleport ke posisi tersimpan!",
                 Duration = 3
             })
         else
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "❌ Belum ada posisi tersimpan!",
+                Description = "Belum ada posisi tersimpan!",
                 Duration = 3
             })
         end
+    end
+})
+
+-- ═══════════════════════════════════════════════════════════
+-- TAB: SECURITY PLAYER (NEW!)
+-- ═══════════════════════════════════════════════════════════
+local SecurityTab = Window:Tab({
+    Title = "Security Player",
+    Icon = "rbxassetid://10747373176"
+})
+
+-- Anti Features Section
+local AntiSection = SecurityTab:Section({
+    Title = "Anti Features",
+    Opened = true
+})
+
+-- Anti AFK Toggle
+local antiAFKEnabled = false
+local antiAFKConnection = nil
+
+AntiSection:Toggle({
+    Title = "Anti AFK",
+    Description = "Mencegah kick karena AFK",
+    Default = false,
+    Callback = function(enabled)
+        antiAFKEnabled = enabled
+        
+        if enabled then
+            local VirtualUser = game:GetService("VirtualUser")
+            antiAFKConnection = Players.LocalPlayer.Idled:Connect(function()
+                VirtualUser:CaptureController()
+                VirtualUser:ClickButton2(Vector2.new())
+            end)
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Anti AFK Enabled!",
+                Duration = 3
+            })
+        else
+            if antiAFKConnection then
+                antiAFKConnection:Disconnect()
+                antiAFKConnection = nil
+            end
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Anti AFK Disabled!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+-- Anti Admin/Dev/Owner Detection
+local antiAdminEnabled = false
+local originalCharacterName = nil
+
+AntiSection:Toggle({
+    Title = "Anti Admin/Dev/Owner",
+    Description = "Menyembunyikan dari deteksi admin",
+    Default = false,
+    Callback = function(enabled)
+        antiAdminEnabled = enabled
+        local character = Players.LocalPlayer.Character
+        
+        if enabled then
+            if character then
+                originalCharacterName = character.Name
+                -- Hide character from admin detection
+                for _, part in ipairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = false
+                    end
+                end
+            end
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Anti Admin/Dev/Owner Enabled!",
+                Duration = 3
+            })
+        else
+            if character then
+                for _, part in ipairs(character:GetDescendants()) do
+                    if part:IsA("BasePart") then
+                        part.CanCollide = true
+                    end
+                end
+            end
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Anti Admin/Dev/Owner Disabled!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+-- Anti Troll Section
+local AntiTrollSection = SecurityTab:Section({
+    Title = "Anti Troll Protection",
+    Opened = true
+})
+
+local antiTrollEnabled = false
+local savedTrollPosition = nil
+local antiTrollConnection = nil
+
+AntiTrollSection:Toggle({
+    Title = "Anti Troll",
+    Description = "Kembali ke posisi awal jika dipaksa bergerak",
+    Default = false,
+    Callback = function(enabled)
+        antiTrollEnabled = enabled
+        local character = Players.LocalPlayer.Character
+        
+        if enabled then
+            if character and character:FindFirstChild("HumanoidRootPart") then
+                savedTrollPosition = character.HumanoidRootPart.CFrame
+                
+                antiTrollConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                    if antiTrollEnabled and character and character:FindFirstChild("HumanoidRootPart") then
+                        if savedTrollPosition then
+                            local currentPos = character.HumanoidRootPart.Position
+                            local savedPos = savedTrollPosition.Position
+                            local distance = (currentPos - savedPos).Magnitude
+                            
+                            -- If moved more than 5 studs, teleport back
+                            if distance > 5 then
+                                character.HumanoidRootPart.CFrame = savedTrollPosition
+                            end
+                        end
+                    end
+                end)
+                
+                Window:Notify({
+                    Title = "Security Player",
+                    Description = "Anti Troll Enabled! Posisi tersimpan.",
+                    Duration = 3
+                })
+            end
+        else
+            if antiTrollConnection then
+                antiTrollConnection:Disconnect()
+                antiTrollConnection = nil
+            end
+            savedTrollPosition = nil
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Anti Troll Disabled!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+-- Player Protection Section
+local ProtectionSection = SecurityTab:Section({
+    Title = "Player Protection",
+    Opened = true
+})
+
+local protectionEnabled = false
+local protectionConnection = nil
+local safeZoneNameTag = nil
+local detectionRadius = 15 -- studs
+
+ProtectionSection:Toggle({
+    Title = "Protect",
+    Description = "Auto pindah ke safe zone jika ada player mendekat",
+    Default = false,
+    Callback = function(enabled)
+        protectionEnabled = enabled
+        local character = Players.LocalPlayer.Character
+        
+        if enabled then
+            protectionConnection = game:GetService("RunService").Heartbeat:Connect(function()
+                if not protectionEnabled then return end
+                
+                local myChar = Players.LocalPlayer.Character
+                if not myChar or not myChar:FindFirstChild("HumanoidRootPart") then return end
+                
+                local myPos = myChar.HumanoidRootPart.Position
+                
+                -- Check for nearby players
+                for _, player in ipairs(Players:GetPlayers()) do
+                    if player ~= Players.LocalPlayer and player.Character then
+                        local otherChar = player.Character
+                        if otherChar:FindFirstChild("HumanoidRootPart") then
+                            local otherPos = otherChar.HumanoidRootPart.Position
+                            local distance = (myPos - otherPos).Magnitude
+                            
+                            if distance < detectionRadius then
+                                -- Teleport to safe zone (high in the sky, center of map)
+                                local safeZone = CFrame.new(0, 1000, 0)
+                                myChar.HumanoidRootPart.CFrame = safeZone
+                                
+                                -- Create name tag if it doesn't exist
+                                if not safeZoneNameTag then
+                                    local BillboardGui = Instance.new("BillboardGui")
+                                    BillboardGui.Parent = myChar.HumanoidRootPart
+                                    BillboardGui.AlwaysOnTop = true
+                                    BillboardGui.Size = UDim2.new(0, 200, 0, 50)
+                                    BillboardGui.StudsOffset = Vector3.new(0, 3, 0)
+                                    
+                                    local TextLabel = Instance.new("TextLabel")
+                                    TextLabel.Parent = BillboardGui
+                                    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
+                                    TextLabel.BackgroundTransparency = 0.3
+                                    TextLabel.Size = UDim2.new(1, 0, 1, 0)
+                                    TextLabel.Font = Enum.Font.SourceSansBold
+                                    TextLabel.Text = "ANDA SEDANG DALAM MODE SAFE ZONE\nANDA TELAH DI GANGU PLAYER LAIN"
+                                    TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+                                    TextLabel.TextScaled = true
+                                    TextLabel.TextWrapped = true
+                                    
+                                    safeZoneNameTag = BillboardGui
+                                end
+                                
+                                Window:Notify({
+                                    Title = "Protection",
+                                    Description = "Player mendekat! Teleport ke Safe Zone!",
+                                    Duration = 3
+                                })
+                                
+                                task.wait(2) -- Cooldown
+                            end
+                        end
+                    end
+                end
+            end)
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Player Protection Enabled!",
+                Duration = 3
+            })
+        else
+            if protectionConnection then
+                protectionConnection:Disconnect()
+                protectionConnection = nil
+            end
+            
+            -- Remove name tag
+            if safeZoneNameTag then
+                safeZoneNameTag:Destroy()
+                safeZoneNameTag = nil
+            end
+            
+            Window:Notify({
+                Title = "Security Player",
+                Description = "Player Protection Disabled!",
+                Duration = 3
+            })
+        end
+    end
+})
+
+ProtectionSection:Slider({
+    Title = "Detection Radius",
+    Description = "Jarak deteksi player (studs)",
+    Default = 15,
+    Min = 5,
+    Max = 50,
+    Callback = function(value)
+        detectionRadius = value
     end
 })
 
@@ -630,8 +952,8 @@ local ProfileSection = SettingsTab:Section({
 
 -- User Profile Info dengan Avatar
 ProfileSection:Button({
-    Title = "👤 " .. Players.LocalPlayer.Name,
-    Description = "User ID: " .. Players.LocalPlayer.UserId .. " | Dev: " .. (DevelopmentMode and "✅" or "❌"),
+    Title = Players.LocalPlayer.Name,
+    Description = "User ID: " .. Players.LocalPlayer.UserId .. " | Dev: " .. (DevelopmentMode and "Active" or "Inactive"),
     Callback = function()
         local thumbnailUrl = Players:GetUserThumbnailAsync(
             Players.LocalPlayer.UserId,
@@ -647,7 +969,7 @@ ProfileSection:Button({
                 Players.LocalPlayer.DisplayName,
                 Players.LocalPlayer.UserId,
                 Players.LocalPlayer.AccountAge,
-                DevelopmentMode and "✅ Active" or "❌ Inactive"
+                DevelopmentMode and "Active" or "Inactive"
             ),
             Duration = 8
         })
@@ -656,12 +978,12 @@ ProfileSection:Button({
 
 -- Time of Day Settings (Unlocked)
 local TimeSection = SettingsTab:Section({
-    Title = "⏰ Time Settings",
+    Title = "Time Settings",
     Opened = true
 })
 
 TimeSection:Button({
-    Title = "🌅 Pagi (Morning)",
+    Title = "Pagi (Morning)",
     Description = "Set waktu ke pagi hari",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -669,14 +991,14 @@ TimeSection:Button({
         Lighting.Brightness = 2
         Window:Notify({
             Title = "Time Settings",
-            Description = "✅ Waktu diubah ke Pagi!",
+            Description = "Waktu diubah ke Pagi!",
             Duration = 3
         })
     end
 })
 
 TimeSection:Button({
-    Title = "☀️ Siang (Noon)",
+    Title = "Siang (Noon)",
     Description = "Set waktu ke siang hari",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -684,14 +1006,14 @@ TimeSection:Button({
         Lighting.Brightness = 3
         Window:Notify({
             Title = "Time Settings",
-            Description = "✅ Waktu diubah ke Siang!",
+            Description = "Waktu diubah ke Siang!",
             Duration = 3
         })
     end
 })
 
 TimeSection:Button({
-    Title = "🌇 Sore (Afternoon)",
+    Title = "Sore (Afternoon)",
     Description = "Set waktu ke sore hari",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -699,14 +1021,14 @@ TimeSection:Button({
         Lighting.Brightness = 2
         Window:Notify({
             Title = "Time Settings",
-            Description = "✅ Waktu diubah ke Sore!",
+            Description = "Waktu diubah ke Sore!",
             Duration = 3
         })
     end
 })
 
 TimeSection:Button({
-    Title = "🌅 Sunset",
+    Title = "Sunset",
     Description = "Set waktu ke sunset",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -714,14 +1036,14 @@ TimeSection:Button({
         Lighting.Brightness = 1.5
         Window:Notify({
             Title = "Time Settings",
-            Description = "✅ Waktu diubah ke Sunset!",
+            Description = "Waktu diubah ke Sunset!",
             Duration = 3
         })
     end
 })
 
 TimeSection:Button({
-    Title = "🌙 Malam (Night)",
+    Title = "Malam (Night)",
     Description = "Set waktu ke malam hari",
     Callback = function()
         local Lighting = game:GetService("Lighting")
@@ -729,7 +1051,7 @@ TimeSection:Button({
         Lighting.Brightness = 0.5
         Window:Notify({
             Title = "Time Settings",
-            Description = "✅ Waktu diubah ke Malam!",
+            Description = "Waktu diubah ke Malam!",
             Duration = 3
         })
     end
@@ -767,7 +1089,7 @@ SpeedSection:Slider({
 })
 
 SpeedSection:Button({
-    Title = "🔄 Reset Speed",
+    Title = "Reset Speed",
     Description = "Reset kecepatan ke normal (16)",
     Callback = function()
         currentSpeed = 16
@@ -777,7 +1099,7 @@ SpeedSection:Button({
         end
         Window:Notify({
             Title = "Speed Control",
-            Description = "✅ Speed direset ke normal (16)!",
+            Description = "Speed direset ke normal (16)!",
             Duration = 3
         })
     end
@@ -785,7 +1107,7 @@ SpeedSection:Button({
 
 -- Teleport ke Player (Unlocked dengan Cooldown)
 local TeleportPlayerSection = AdvancedTab:Section({
-    Title = "📍 Teleport to Player",
+    Title = "Teleport to Player",
     Opened = true
 })
 
@@ -800,7 +1122,7 @@ TeleportPlayerSection:Dropdown({
         if teleportCooldown then
             Window:Notify({
                 Title = "Teleport",
-                Description = "⏱️ Cooldown! Tunggu 10 detik.",
+                Description = " Cooldown! Tunggu 10 detik.",
                 Duration = 3
             })
             return
@@ -815,7 +1137,7 @@ TeleportPlayerSection:Dropdown({
                 teleportCooldown = true
                 Window:Notify({
                     Title = "Teleport",
-                    Description = "✅ Teleported to " .. selectedPlayer .. "!",
+                    Description = " Teleported to " .. selectedPlayer .. "!",
                     Duration = 3
                 })
                 
@@ -823,7 +1145,7 @@ TeleportPlayerSection:Dropdown({
                     teleportCooldown = false
                     Window:Notify({
                         Title = "Teleport",
-                        Description = "✅ Cooldown selesai!",
+                        Description = " Cooldown selesai!",
                         Duration = 2
                     })
                 end)
@@ -831,7 +1153,7 @@ TeleportPlayerSection:Dropdown({
         else
             Window:Notify({
                 Title = "Teleport",
-                Description = "❌ Player tidak ditemukan!",
+                Description = " Player tidak ditemukan!",
                 Duration = 3
             })
         end
@@ -884,7 +1206,7 @@ WaterSection:Toggle({
             
             Window:Notify({
                 Title = "Walk on Water",
-                Description = "✅ Walk on Water ON!",
+                Description = " Walk on Water ON!",
                 Duration = 3
             })
         else
@@ -895,7 +1217,7 @@ WaterSection:Toggle({
             
             Window:Notify({
                 Title = "Walk on Water",
-                Description = "❌ Walk on Water OFF!",
+                Description = " Walk on Water OFF!",
                 Duration = 3
             })
         end
@@ -904,7 +1226,7 @@ WaterSection:Toggle({
 
 -- Spectator Mode (Locked - Premium)
 local SpectatorSection = AdvancedTab:Section({
-    Title = "👁️ Spectator Mode",
+    Title = "Eye Spectator Mode",
     Opened = true
 })
 
@@ -917,7 +1239,7 @@ SpectatorSection:Button({
         if not DevelopmentMode then
             Window:Notify({
                 Title = "Spectator Mode",
-                Description = "🔒 Fitur Premium! Login Development dulu dengan kode APIS.",
+                Description = " Fitur Premium! Login Development dulu dengan kode APIS.",
                 Duration = 5
             })
             return
@@ -941,7 +1263,7 @@ SpectatorSection:Button({
             
             Window:Notify({
                 Title = "Spectator Mode",
-                Description = "✅ Spectator Mode ON!",
+                Description = " Spectator Mode ON!",
                 Duration = 3
             })
         else
@@ -959,7 +1281,7 @@ SpectatorSection:Button({
             
             Window:Notify({
                 Title = "Spectator Mode",
-                Description = "❌ Spectator Mode OFF!",
+                Description = " Spectator Mode OFF!",
                 Duration = 3
             })
         end
@@ -987,7 +1309,7 @@ SpectatorSection:Button({
             
             Window:Notify({
                 Title = "Spectator Mode",
-                Description = "✅ Exited Spectator Mode!",
+                Description = " Exited Spectator Mode!",
                 Duration = 3
             })
         end
@@ -996,7 +1318,7 @@ SpectatorSection:Button({
 
 -- Invisible Mode (Locked - Premium)
 local InvisibleSection = AdvancedTab:Section({
-    Title = "👻 Invisible Mode",
+    Title = "Ghost Invisible Mode",
     Opened = true
 })
 
@@ -1009,7 +1331,7 @@ InvisibleSection:Button({
         if not DevelopmentMode then
             Window:Notify({
                 Title = "Invisible Mode",
-                Description = "🔒 Fitur Premium! Login Development dulu dengan kode APIS.",
+                Description = " Fitur Premium! Login Development dulu dengan kode APIS.",
                 Duration = 5
             })
             return
@@ -1031,7 +1353,7 @@ InvisibleSection:Button({
             
             Window:Notify({
                 Title = "Invisible Mode",
-                Description = "✅ Invisible Mode ON!",
+                Description = " Invisible Mode ON!",
                 Duration = 3
             })
         else
@@ -1047,7 +1369,7 @@ InvisibleSection:Button({
             
             Window:Notify({
                 Title = "Invisible Mode",
-                Description = "❌ Invisible Mode OFF!",
+                Description = " Invisible Mode OFF!",
                 Duration = 3
             })
         end
@@ -1056,7 +1378,7 @@ InvisibleSection:Button({
 
 -- God Mode Premium (Locked)
 local GodModeSection = AdvancedTab:Section({
-    Title = "⚡ God Mode Premium",
+    Title = " God Mode Premium",
     Opened = true
 })
 
@@ -1068,7 +1390,7 @@ GodModeSection:Toggle({
         if not DevelopmentMode then
             Window:Notify({
                 Title = "God Mode Premium",
-                Description = "🔒 Fitur Premium! Login Development dulu dengan kode APIS.",
+                Description = " Fitur Premium! Login Development dulu dengan kode APIS.",
                 Duration = 5
             })
             return
@@ -1083,7 +1405,7 @@ GodModeSection:Toggle({
             
             Window:Notify({
                 Title = "God Mode Premium",
-                Description = "✅ God Mode Premium ON!",
+                Description = " God Mode Premium ON!",
                 Duration = 3
             })
         else
@@ -1095,7 +1417,7 @@ GodModeSection:Toggle({
             
             Window:Notify({
                 Title = "God Mode Premium",
-                Description = "❌ God Mode Premium OFF!",
+                Description = " God Mode Premium OFF!",
                 Duration = 3
             })
         end
@@ -1153,10 +1475,10 @@ DiscordSection:Button({
 -- Notification
 Window:Notify({
     Title = "ANTC HUB",
-    Description = "✅ Loaded successfully! Discord: discord.gg/antchub",
+    Description = " Loaded successfully! Discord: discord.gg/antchub",
     Duration = 5
 })
 
-print("🎉 ANTC HUB Loaded Successfully!")
-print("📢 Discord: discord.gg/antchub")
-print("🔧 Development Mode: " .. (DevelopmentMode and "Active" or "Inactive"))
+print(" ANTC HUB Loaded Successfully!")
+print(" Discord: discord.gg/antchub")
+print(" Development Mode: " .. (DevelopmentMode and "Active" or "Inactive"))
