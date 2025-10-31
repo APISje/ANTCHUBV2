@@ -3,6 +3,10 @@
     ║                     ANTC HUB LOADER                       ║
     ║              Discord: https://discord.gg/antchub          ║
     ╚═══════════════════════════════════════════════════════════╝
+    
+    CUSTOMIZATION:
+    - Line ~25: Ganti BannerImageID dengan Roblox Asset ID banner Anda
+    - Line ~26: Ganti LogoImageID dengan Roblox Asset ID logo Anda
 ]]
 
 print("🔄 Loading ANTC HUB...")
@@ -12,10 +16,17 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/APISje
 
 print("✅ ANTC HUB Library Loaded!")
 
+-- ═══════════════════════════════════════════════════════════
+-- SETTING BANNER & LOGO (GANTI DISINI)
+-- ═══════════════════════════════════════════════════════════
+local BannerImageID = "10723415766"  -- ← GANTI dengan Asset ID banner Anda
+local LogoImageID = "10723415766"     -- ← GANTI dengan Asset ID logo/infinite Anda
+-- ═══════════════════════════════════════════════════════════
+
 -- Buat Window
 local Window = WindUI:CreateWindow({
     Title = "ANTC HUB",
-    Icon = "rbxassetid://10723415766",
+    Icon = "rbxassetid://" .. LogoImageID,
     Author = "ANTC Team",
     Folder = "ANTCHub_Data",
     Size = UDim2.fromOffset(580, 460),
@@ -28,14 +39,103 @@ local Window = WindUI:CreateWindow({
 
 print("✅ Window Created!")
 
--- Tab Player
+-- ═══════════════════════════════════════════════════════════
+-- TAB: FISH IT (GAME SPECIFIC)
+-- ═══════════════════════════════════════════════════════════
+local FishItTab = Window:Tab({
+    Title = "FISH IT",
+    Icon = "rbxassetid://10747373176"
+})
+
+local FishItSection = FishItTab:Section({
+    Title = "Game Features",
+    Opened = true  -- Auto expand
+})
+
+-- Super Intan (LOCKED)
+FishItSection:Button({
+    Title = "🔒 Super Intan",
+    Description = "Tahap perbaikan - Coming Soon!",
+    Locked = true,
+    Callback = function()
+        Window:Notify({
+            Title = "ANTC HUB",
+            Description = "⚠️ Fitur masih dalam tahap perbaikan!",
+            Duration = 3
+        })
+    end
+})
+
+-- Super Bland (LOCKED)
+FishItSection:Button({
+    Title = "🔒 Super Bland",
+    Description = "Tahap uji - Coming Soon!",
+    Locked = true,
+    Callback = function()
+        Window:Notify({
+            Title = "ANTC HUB",
+            Description = "⚠️ Fitur masih dalam tahap uji!",
+            Duration = 3
+        })
+    end
+})
+
+-- Fast Auto Clicker (UNLOCKED)
+local FastAutoClickerEnabled = false
+local AutoClickConnection = nil
+
+FishItSection:Toggle({
+    Title = "Fast Auto Clicker",
+    Description = "Auto click 0ms (tidak bisa diatur)",
+    Default = false,
+    Callback = function(enabled)
+        FastAutoClickerEnabled = enabled
+        
+        if enabled then
+            -- Start auto clicker
+            local VirtualInputManager = game:GetService("VirtualInputManager")
+            
+            AutoClickConnection = task.spawn(function()
+                while FastAutoClickerEnabled do
+                    VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 1)
+                    task.wait()  -- 0ms delay
+                    VirtualInputManager:SendMouseButtonEvent(0, 0, 0, false, game, 1)
+                    task.wait()  -- 0ms delay
+                end
+            end)
+            
+            Window:Notify({
+                Title = "ANTC HUB",
+                Description = "✅ Fast Auto Clicker ON (0ms)",
+                Duration = 3
+            })
+        else
+            -- Stop auto clicker
+            if AutoClickConnection then
+                task.cancel(AutoClickConnection)
+                AutoClickConnection = nil
+            end
+            
+            Window:Notify({
+                Title = "ANTC HUB",
+                Description = "❌ Fast Auto Clicker OFF",
+                Duration = 3
+            })
+        end
+    end
+})
+
+-- ═══════════════════════════════════════════════════════════
+-- TAB: PLAYER
+-- ═══════════════════════════════════════════════════════════
 local PlayerTab = Window:Tab({
     Title = "Player",
     Icon = "rbxassetid://10734950309"
 })
 
 local PlayerSection = PlayerTab:Section({
-    Title = "Movement"
+    Title = "Movement",
+    Opened = true  -- Auto expand
 })
 
 -- WalkSpeed Slider
@@ -94,7 +194,8 @@ PlayerSection:Toggle({
 
 -- Visual Section
 local VisualSection = PlayerTab:Section({
-    Title = "Visual"
+    Title = "Visual",
+    Opened = true  -- Auto expand
 })
 
 -- ESP Toggle
@@ -124,7 +225,8 @@ local CombatTab = Window:Tab({
 })
 
 local CombatSection = CombatTab:Section({
-    Title = "God Mode"
+    Title = "God Mode",
+    Opened = true  -- Auto expand
 })
 
 -- God Mode Toggle
@@ -144,7 +246,8 @@ local TeleportTab = Window:Tab({
 })
 
 local TeleportSection = TeleportTab:Section({
-    Title = "Position Manager"
+    Title = "Position Manager",
+    Opened = true  -- Auto expand
 })
 
 -- Save Position Button
