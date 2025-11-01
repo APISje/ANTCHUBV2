@@ -1429,7 +1429,7 @@ GodModeSection:Toggle({
 -- ═══════════════════════════════════════════════════════════
 local MiscTab = Window:Tab({
     Title = "Misc",
-    Icon = "rbxassetid://10734924532"
+    Icon = "rbxassetid:m//10734924532"
 })
 
 local MiscSection = MiscTab:Section({
