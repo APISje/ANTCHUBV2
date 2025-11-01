@@ -395,7 +395,10 @@ PlayerSection:Slider({
     Min = 16,
     Max = 500,
     Callback = function(value)
-        WindUI.Fitur.SetWalkSpeed(value)
+        local character = LocalPlayer.Character
+        if character and character:FindFirstChild("Humanoid") then
+            character.Humanoid.WalkSpeed = value
+        end
     end
 })
 
@@ -406,7 +409,10 @@ PlayerSection:Slider({
     Min = 50,
     Max = 500,
     Callback = function(value)
-        WindUI.Fitur.SetJumpPower(value)
+        local character = LocalPlayer.Character
+        if character and character:FindFirstChild("Humanoid") then
+            character.Humanoid.JumpPower = value
+        end
     end
 })
 
@@ -740,70 +746,78 @@ local TPPlayerSection = TeleportTab:Section({
     Opened = true
 })
 
-TPPlayerSection:Input({
-    Title = "Player Name / Display Name",
-    Description = "Ketik username atau display name player",
-    Placeholder = "Contoh: Player123",
+local selectedPlayer = nil
+
+local function GetPlayerList()
+    local playerList = {}
+    for _, player in ipairs(Players:GetPlayers()) do
+        if player ~= LocalPlayer then
+            table.insert(playerList, player.Name)
+        end
+    end
+    return playerList
+end
+
+TPPlayerSection:Dropdown({
+    Title = "Pilih Player",
+    Description = "Pilih player untuk teleportasi",
+    Options = GetPlayerList(),
+    Default = nil,
     Callback = function(value)
-        if not value or value == "" then
+        selectedPlayer = Players:FindFirstChild(value)
+        if selectedPlayer then
             Window:Notify({
                 Title = "Teleport",
-                Description = "❌ Masukkan nama player!",
+                Description = "✅ Player terpilih: " .. value,
+                Duration = 2
+            })
+        end
+    end
+})
+
+TPPlayerSection:Button({
+    Title = "Teleport ke Player",
+    Description = "Tekan untuk teleport ke player yang dipilih",
+    Callback = function()
+        if not selectedPlayer then
+            Window:Notify({
+                Title = "Teleport",
+                Description = "❌ Pilih player terlebih dahulu!",
                 Duration = 2
             })
             return
         end
         
-        local searchName = value:lower()
-        local targetPlayer = nil
-        
-        targetPlayer = Players:FindFirstChild(value)
-        
-        if not targetPlayer then
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player.Name:lower() == searchName then
-                    targetPlayer = player
-                    break
-                end
-            end
-        end
-        
-        if not targetPlayer then
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player.DisplayName:lower() == searchName then
-                    targetPlayer = player
-                    break
-                end
-            end
-        end
-        
-        if not targetPlayer then
-            for _, player in ipairs(Players:GetPlayers()) do
-                if player.Name:lower():find(searchName) or player.DisplayName:lower():find(searchName) then
-                    targetPlayer = player
-                    break
-                end
-            end
-        end
-        
-        if targetPlayer and targetPlayer.Character and targetPlayer.Character:FindFirstChild("HumanoidRootPart") then
+        if selectedPlayer.Character and selectedPlayer.Character:FindFirstChild("HumanoidRootPart") then
             local localChar = LocalPlayer.Character
             if localChar and localChar:FindFirstChild("HumanoidRootPart") then
-                localChar.HumanoidRootPart.CFrame = targetPlayer.Character.HumanoidRootPart.CFrame
+                localChar.HumanoidRootPart.CFrame = selectedPlayer.Character.HumanoidRootPart.CFrame
                 
                 Window:Notify({
                     Title = "Teleport",
-                    Description = "✅ Teleported to " .. targetPlayer.Name,
+                    Description = "✅ Teleported to " .. selectedPlayer.Name,
                     Duration = 3
                 })
             end
         else
             Window:Notify({
                 Title = "Teleport",
-                Description = "❌ Player tidak ditemukan!",
-                Duration = 3
+                Description = "❌ Player tidak tersedia!",
+                Duration = 2
             })
         end
+    end
+})
+
+TPPlayerSection:Button({
+    Title = "Refresh Player List",
+    Description = "Refresh daftar player",
+    Callback = function()
+        Window:Notify({
+            Title = "Teleport",
+            Description = "⚠️ Tutup dan buka kembali menu untuk refresh list!",
+            Duration = 3
+        })
     end
 })
 
