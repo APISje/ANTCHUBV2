@@ -1,22 +1,3 @@
---[[
-    ╔═══════════════════════════════════════════════════════════╗
-    ║                     ANTC HUB LOADER                       ║
-    ║              Discord: https://discord.gg/antchub          ║
-    ╚═══════════════════════════════════════════════════════════╝
-    
-    FEATURES:
-    - Security features (Anti AFK, Anti Staff, Anti Troll)
-    - In-game MS/Ping display (tidak mengikuti GUI)
-    - DEX Explorer (locked - unlock dengan dev mode)
-    - Super Bland & Super Intan (locked - unlock dengan dev mode)
-    - RGB Nametag untuk aapis3308
-    - Teleport to player (support username & display name)
-    - Fast Auto Clicker FIXED (benar-benar klik!)
-]]
-
-print("🔄 Loading ANTC HUB...")
-
--- Services
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local TeleportService = game:GetService("TeleportService")
@@ -24,30 +5,16 @@ local UserInputService = game:GetService("UserInputService")
 local VirtualInputManager = game:GetService("VirtualInputManager")
 local Stats = game:GetService("Stats")
 
--- Load WindUI Library
 local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/APISje/ANTCHUBV2/refs/heads/main/main.lua", true))()
 
-print("✅ ANTC HUB Library Loaded!")
-
--- ═══════════════════════════════════════════════════════════
--- SETTING BANNER & LOGO (GANTI DISINI)
--- ═══════════════════════════════════════════════════════════
 local BannerImageID = "10723415766"
 local LogoImageID = "10723415766"
--- ═══════════════════════════════════════════════════════════
 
--- Variables
 local LocalPlayer = Players.LocalPlayer
 
--- ═══════════════════════════════════════════════════════════
--- DEVELOPMENT MODE SYSTEM
--- ═══════════════════════════════════════════════════════════
 local DevelopmentMode = false
 local DevelopmentCode = "APIS"
 
--- ═══════════════════════════════════════════════════════════
--- IN-GAME MS DISPLAY (TIDAK MENGIKUTI GUI)
--- ═══════════════════════════════════════════════════════════
 local MSDisplayEnabled = false
 local MSBillboard = nil
 local MSUpdateConnection = nil
@@ -110,9 +77,6 @@ local function CreateMSDisplay()
     end)
 end
 
--- ═══════════════════════════════════════════════════════════
--- RGB NAMETAG UNTUK AAPIS3308
--- ═══════════════════════════════════════════════════════════
 local NametagConnections = {}
 
 local function CleanupNametag(player)
@@ -235,9 +199,6 @@ Players.PlayerRemoving:Connect(function(player)
     CleanupNametag(player)
 end)
 
--- ═══════════════════════════════════════════════════════════
--- CREATE WINDOW
--- ═══════════════════════════════════════════════════════════
 local Window = WindUI:CreateWindow({
     Title = "ANTC HUB",
     Icon = "rbxassetid://" .. LogoImageID,
@@ -251,11 +212,6 @@ local Window = WindUI:CreateWindow({
     HasOutline = true
 })
 
-print("✅ Window Created!")
-
--- ═══════════════════════════════════════════════════════════
--- TAB: FISH IT (GAME SPECIFIC)
--- ═══════════════════════════════════════════════════════════
 local FishItTab = Window:Tab({
     Title = "FISH IT",
     Icon = "rbxassetid://10747373176"
@@ -266,7 +222,6 @@ local FishItSection = FishItTab:Section({
     Opened = true
 })
 
--- Super Intan (LOCKED - Unlock dengan Dev Mode)
 FishItSection:Button({
     Title = "Super Intan",
     Description = "🔒 LOCKED - Masukkan kode APIS di tab Development",
@@ -288,7 +243,6 @@ FishItSection:Button({
     end
 })
 
--- Super Bland (LOCKED - Unlock dengan Dev Mode) - LEBIH CEPAT DARI FAST CLICKER
 local SuperBlandEnabled = false
 local SuperBlandConnection = nil
 local superBlandDelay = 0
@@ -357,44 +311,35 @@ FishItSection:Toggle({
     end
 })
 
--- Fast Auto Clicker (UNLOCKED) - Multi-Device Support (PC, Mobile, Tablet)
 local FastAutoClickerEnabled = false
 local AutoClickConnection = nil
 
 FishItSection:Toggle({
     Title = "Fast Auto Clicker (0ms)",
-    Description = "Auto click 0ms - Support PC, Mobile & Tablet",
+    Description = "Support PC, Mobile & Tablet",
     Default = false,
     Callback = function(enabled)
         FastAutoClickerEnabled = enabled
         
         if enabled then
-            -- Detect platform untuk compatibility
             local isMobile = UserInputService.TouchEnabled and not UserInputService.MouseEnabled
             local isTablet = UserInputService.TouchEnabled and UserInputService.KeyboardEnabled
-            local isPC = UserInputService.MouseEnabled and UserInputService.KeyboardEnabled
             
-            -- Start auto clicker dengan multi-method support
             AutoClickConnection = task.spawn(function()
                 while FastAutoClickerEnabled do
                     pcall(function()
-                        -- Method 1: mouse1press (Best for executors)
                         if mouse1press and mouse1release then
                             mouse1press()
                             task.wait()
                             mouse1release()
-                        -- Method 2: mouse1click (Alternative for some executors)
                         elseif mouse1click then
                             mouse1click()
-                        -- Method 3: VirtualInputManager (Universal - All Devices)
                         else
                             local mousePos = UserInputService:GetMouseLocation()
-                            -- Touch support for Mobile & Tablet
                             if isMobile or isTablet then
                                 VirtualInputManager:SendMouseButtonEvent(mousePos.X, mousePos.Y, 0, true, game, 0)
                                 task.wait()
                                 VirtualInputManager:SendMouseButtonEvent(mousePos.X, mousePos.Y, 0, false, game, 0)
-                            -- Mouse support for PC
                             else
                                 VirtualInputManager:SendMouseButtonEvent(0, 0, 0, true, game, 1)
                                 task.wait()
@@ -402,11 +347,10 @@ FishItSection:Toggle({
                             end
                         end
                     end)
-                    task.wait()  -- 0ms delay
+                    task.wait()
                 end
             end)
             
-            -- Device-specific notification
             local deviceType = "PC"
             if isMobile then
                 deviceType = "Mobile"
@@ -416,11 +360,10 @@ FishItSection:Toggle({
             
             Window:Notify({
                 Title = "ANTC HUB",
-                Description = "✅ Fast Auto Clicker ON (0ms) - " .. deviceType,
+                Description = "✅ Fast Auto Clicker ON - " .. deviceType,
                 Duration = 3
             })
         else
-            -- Stop auto clicker
             if AutoClickConnection then
                 task.cancel(AutoClickConnection)
                 AutoClickConnection = nil
@@ -435,9 +378,6 @@ FishItSection:Toggle({
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: PLAYER
--- ═══════════════════════════════════════════════════════════
 local PlayerTab = Window:Tab({
     Title = "Player",
     Icon = "rbxassetid://10734950309"
@@ -522,7 +462,7 @@ VisualSection:Toggle({
 
 VisualSection:Toggle({
     Title = "In-Game MS Display",
-    Description = "Tampilkan ping di layar in-game (tidak ikuti GUI)",
+    Description = "Tampilkan ping di layar",
     Default = false,
     Callback = function(enabled)
         MSDisplayEnabled = enabled
@@ -563,9 +503,6 @@ VisualSection:Toggle({
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: SECURITY
--- ═══════════════════════════════════════════════════════════
 local SecurityTab = Window:Tab({
     Title = "Security",
     Icon = "rbxassetid://10747373176"
@@ -748,9 +685,6 @@ AntiSection:Toggle({
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: TELEPORT
--- ═══════════════════════════════════════════════════════════
 local TeleportTab = Window:Tab({
     Title = "Teleport",
     Icon = "rbxassetid://10734896388"
@@ -859,49 +793,46 @@ TPPlayerSection:Input({
                 
                 Window:Notify({
                     Title = "Teleport",
-                    Description = "✅ Teleported to " .. targetPlayer.Name .. " (" .. targetPlayer.DisplayName .. ")!",
+                    Description = "✅ Teleported to " .. targetPlayer.Name,
                     Duration = 3
                 })
             end
         else
             Window:Notify({
                 Title = "Teleport",
-                Description = "❌ Player '" .. value .. "' tidak ditemukan!",
+                Description = "❌ Player tidak ditemukan!",
                 Duration = 3
             })
         end
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: DEVELOPMENT
--- ═══════════════════════════════════════════════════════════
 local DevelopmentTab = Window:Tab({
     Title = "Development",
     Icon = "rbxassetid://10747373176"
 })
 
 local DevLoginSection = DevelopmentTab:Section({
-    Title = "🔐 Development Login",
+    Title = "Development Login",
     Opened = true
 })
 
 DevLoginSection:Input({
     Title = "Masukkan Kode Development",
-    Description = "Kode: APIS - Untuk unlock Super Bland, Super Intan, dan DEX",
+    Description = "Kode: APIS",
     Placeholder = "Masukkan kode APIS...",
     Callback = function(value)
         if value == DevelopmentCode then
             DevelopmentMode = true
             Window:Notify({
                 Title = "Development Panel",
-                Description = "✅ Access Granted! Welcome Developer " .. LocalPlayer.Name .. "! Semua fitur unlocked!",
+                Description = "✅ Access Granted! Semua fitur unlocked!",
                 Duration = 5
             })
         else
             Window:Notify({
                 Title = "Development Panel",
-                Description = "❌ Kode salah! Fitur tetap locked.",
+                Description = "❌ Kode salah!",
                 Duration = 3
             })
         end
@@ -909,18 +840,18 @@ DevLoginSection:Input({
 })
 
 local DexSection = DevelopmentTab:Section({
-    Title = "🔧 Developer Tools",
+    Title = "Developer Tools",
     Opened = true
 })
 
 DexSection:Button({
     Title = "Dex Explorer",
-    Description = "🔒 LOCKED - Masukkan kode APIS untuk unlock",
+    Description = "🔒 LOCKED - Masukkan kode APIS",
     Callback = function()
         if not DevelopmentMode then
             Window:Notify({
                 Title = "Dex Explorer",
-                Description = "🔒 LOCKED! Masukkan kode APIS di atas untuk unlock!",
+                Description = "🔒 LOCKED!",
                 Duration = 5
             })
             return
@@ -928,15 +859,12 @@ DexSection:Button({
         
         Window:Notify({
             Title = "Dex Explorer",
-            Description = "⚠️ Dex Explorer masih dalam tahap pengujian! Coming soon...",
+            Description = "Coming soon...",
             Duration = 5
         })
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: COMBAT
--- ═══════════════════════════════════════════════════════════
 local CombatTab = Window:Tab({
     Title = "Combat",
     Icon = "rbxassetid://10747373176"
@@ -949,16 +877,13 @@ local CombatSection = CombatTab:Section({
 
 CombatSection:Toggle({
     Title = "God Mode",
-    Description = "HP unlimited (mungkin tidak work di semua game)",
+    Description = "HP unlimited",
     Default = false,
     Callback = function(enabled)
         WindUI.Fitur.EnableGodMode(enabled)
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- TAB: MISC
--- ═══════════════════════════════════════════════════════════
 local MiscTab = Window:Tab({
     Title = "Misc",
     Icon = "rbxassetid://10734924532"
@@ -992,21 +917,8 @@ DiscordSection:Button({
     end
 })
 
--- ═══════════════════════════════════════════════════════════
--- FINAL NOTIFICATION
--- ═══════════════════════════════════════════════════════════
 Window:Notify({
     Title = "ANTC HUB",
-    Description = "✅ Loaded successfully! Masukkan kode APIS di tab Development untuk unlock fitur!",
+    Description = " Loaded successfully!",
     Duration = 5
 })
-
-print("🎉 ANTC HUB Loaded Successfully!")
-print("📢 Discord: discord.gg/antchub")
-print("🔐 Security features: ACTIVE")
-print("📊 MS Display: Available in Visual tab")
-print("🏷️ RGB Nametag: Auto for aapis3308")
-print("🚀 Teleport to Player: Support username & display name")
-print("⚡ Fast Auto Clicker: FIXED - Benar-benar klik sekarang!")
-print("🔓 Unlock fitur: Masukkan kode APIS di tab Development")
-print("💡 Super Bland: Ultra fast clicker (unlock dengan dev mode)")
